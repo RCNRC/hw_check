@@ -28,9 +28,9 @@ def main():
                 timeout=request_timeout,
             )
             response.raise_for_status()
-            response_fields = response.json()
-            if response_fields['status'] == 'found':
-                for attempt in response_fields['new_attempts']:
+            attempts = response.json()
+            if attempts['status'] == 'found':
+                for attempt in attempts['new_attempts']:
                     text_title = f'Был проверен урок '\
                                  f'{attempt["lesson_title"]}\n\n'
                     text_body = 'Нужно доработать.\n\n'\
@@ -40,11 +40,11 @@ def main():
                     text = f'{text_title}{text_body}{text_end}'
                     bot.send_message(chat_id=chat_id, text=text)
                 params = {
-                    'timestamp': response_fields['last_attempt_timestamp'],
+                    'timestamp': attempts['last_attempt_timestamp'],
                 }
-            elif response_fields['status'] == 'timeout':
+            elif attempts['status'] == 'timeout':
                 params = {
-                    'timestamp': response_fields['timestamp_to_request'],
+                    'timestamp': attempts['timestamp_to_request'],
                 }
         except requests.exceptions.ReadTimeout:
             print('Server read timeout.')
