@@ -47,8 +47,7 @@ def main():
                     'timestamp': attempts['timestamp_to_request'],
                 }
         except requests.exceptions.ReadTimeout:
-            print('Server read timeout.')
-            params = {}
+            pass
         except (ValueError, json.decoder.JSONDecodeError):
             print(f'Response is not a json:\n{response.content}')
         except requests.exceptions.ConnectionError:
