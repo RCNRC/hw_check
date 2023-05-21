@@ -48,8 +48,6 @@ def main():
                 }
         except requests.exceptions.ReadTimeout:
             pass
-        except (ValueError, json.decoder.JSONDecodeError):
-            print(f'Response is not a json:\n{response.content}')
         except requests.exceptions.ConnectionError:
             print('Connection was terminated unexpectedly.')
             time.sleep(request_timeout)
