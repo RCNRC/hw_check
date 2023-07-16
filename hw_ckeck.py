@@ -1,12 +1,16 @@
-import json
 import time
+import logging
 import sys
 import requests
 from dotenv import dotenv_values
 import telegram
 
 
-def main():    
+def main():
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
+    )
     devman_api_token = dotenv_values('.env')['DEVMAN_API_TOKEN']
     bot_legram_api_token = dotenv_values('.env')['TELEGRAM_BOT_API_TOKEN']
     chat_id = dotenv_values('.env')['TELEGRAM_CHAT_ID']
@@ -19,6 +23,7 @@ def main():
     base_url = 'https://dvmn.org/api/'
     request_timeout = 120
     long_polling_api_endpoint = 'long_polling/'
+    logging.info('Bot started successfully.')
     while True:
         try:
             response = requests.get(
@@ -39,6 +44,7 @@ def main():
                     text_end = f'Ссылка: {attempt["lesson_url"]}'
                     text = f'{text_title}{text_body}{text_end}'
                     bot.send_message(chat_id=chat_id, text=text)
+                    logging.info('Bot sent message.')
                 params = {
                     'timestamp': attempts['last_attempt_timestamp'],
                 }
@@ -49,10 +55,10 @@ def main():
         except requests.exceptions.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError:
-            print('Connection was terminated unexpectedly.')
+            logging.warning('Connection was terminated unexpectedly.')
             time.sleep(request_timeout)
         except KeyboardInterrupt:
-            print('Bot ends work.')
+            logging.info('Bot ended work.')
             sys.exit(0)
 
 
