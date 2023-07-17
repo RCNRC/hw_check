@@ -6,16 +6,31 @@ from dotenv import dotenv_values
 import telegram
 
 
+class MyLogsHandler(logging.Handler):
+
+    def __init__(self, tg_bot: telegram.Bot, chat_id):
+        super().__init__()
+        self.chat_id = chat_id
+        self.tg_bot = tg_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+
 def main():
     logging.basicConfig(
-        level=logging.DEBUG,
         format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
     )
+    logger = logging.getLogger("Логгер бота.")
+    logger.setLevel(logging.DEBUG)
     devman_api_token = dotenv_values('.env')['DEVMAN_API_TOKEN']
     bot_legram_api_token = dotenv_values('.env')['TELEGRAM_BOT_API_TOKEN']
     chat_id = dotenv_values('.env')['TELEGRAM_CHAT_ID']
-    bot = telegram.Bot(token=bot_legram_api_token)
-
+    logger.addHandler(MyLogsHandler(
+        telegram.Bot(token=bot_legram_api_token),
+        chat_id,
+    ))
     headers = {
         'Authorization': f'Token {devman_api_token}'
     }
@@ -23,7 +38,7 @@ def main():
     base_url = 'https://dvmn.org/api/'
     request_timeout = 120
     long_polling_api_endpoint = 'long_polling/'
-    logging.info('Bot started successfully.')
+    logger.info('Bot started successfully.')
     while True:
         try:
             response = requests.get(
@@ -43,8 +58,7 @@ def main():
                                 else 'Принято.\n\n'
                     text_end = f'Ссылка: {attempt["lesson_url"]}'
                     text = f'{text_title}{text_body}{text_end}'
-                    bot.send_message(chat_id=chat_id, text=text)
-                    logging.info('Bot sent message.')
+                    logger.info(text)
                 params = {
                     'timestamp': attempts['last_attempt_timestamp'],
                 }
@@ -55,10 +69,10 @@ def main():
         except requests.exceptions.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError:
-            logging.warning('Connection was terminated unexpectedly.')
+            logger.warning('Connection was terminated unexpectedly.')
             time.sleep(request_timeout)
         except KeyboardInterrupt:
-            logging.info('Bot ended work.')
+            logger.info('Bot ended work.')
             sys.exit(0)
 
 
