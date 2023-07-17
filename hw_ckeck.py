@@ -74,6 +74,8 @@ def main():
         except KeyboardInterrupt:
             logger.info('Bot ended work.')
             sys.exit(0)
+        except Exception as exception:
+            logger.error(exception)
 
 
 if __name__ == '__main__':
