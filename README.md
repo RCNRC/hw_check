@@ -17,6 +17,8 @@
 7. В файл `.env` добавить строку `TELEGRAM_BOT_API_TOKEN=token`, где `token` - полученный на шаге 6 токен от [BotFather](https://telegram.me/BotFather).
 8. В файл `.env` добавить строку `TELEGRAM_CHAT_ID=id`, где `id` - ваш "id" в телеграмме.
    - Если не знаете ваш "id", воспользуйтесь специальным [ботом](https://telegram.me/userinfobot).
+9. Создайте нового телеграмм бота для логгирования у [BotFather](https://telegram.me/BotFather). По итогу вы должны получить `token` от нового бота.
+10. В файл `.env` добавить строку `TELEGRAM_BOT_LOGGER_API_TOKEN=token`, где `token` - полученный на шаге 9 токен от [BotFather](https://telegram.me/BotFather).
 
 ## Запуск
 
