@@ -6,7 +6,10 @@ from dotenv import dotenv_values
 import telegram
 
 
-class MyLogsHandler(logging.Handler):
+logger = logging.getLogger('bots logger')
+
+
+class LogsHandler(logging.Handler):
 
     def __init__(
             self,
@@ -27,18 +30,13 @@ class MyLogsHandler(logging.Handler):
 
 
 def main():
-    logging.basicConfig(
-        format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
-    )
-    logger = logging.getLogger("Логгер бота.")
-    logger.setLevel(logging.DEBUG)
     devman_api_token = dotenv_values('.env')['DEVMAN_API_TOKEN']
     bot_telegram_api_token = dotenv_values('.env')['TELEGRAM_BOT_API_TOKEN']
     bot_telegram_logger_api_token = dotenv_values('.env')[
         'TELEGRAM_BOT_LOGGER_API_TOKEN'
     ]
     chat_id = dotenv_values('.env')['TELEGRAM_CHAT_ID']
-    logger.addHandler(MyLogsHandler(
+    logger.addHandler(LogsHandler(
         telegram.Bot(token=bot_telegram_logger_api_token),
         telegram.Bot(token=bot_telegram_api_token),
         chat_id,
@@ -91,4 +89,8 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
+    )
+    logger.setLevel(logging.DEBUG)
     main()
