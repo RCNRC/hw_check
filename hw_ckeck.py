@@ -34,12 +34,12 @@ def main():
         format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
     )
     logger.setLevel(logging.DEBUG)
-    devman_api_token = dotenv_values('.env')['DEVMAN_API_TOKEN']
-    bot_telegram_api_token = dotenv_values('.env')['TELEGRAM_BOT_API_TOKEN']
-    bot_telegram_logger_api_token = dotenv_values('.env')[
+    devman_api_token = dotenv_values()['DEVMAN_API_TOKEN']
+    bot_telegram_api_token = dotenv_values()['TELEGRAM_BOT_API_TOKEN']
+    bot_telegram_logger_api_token = dotenv_values()[
         'TELEGRAM_BOT_LOGGER_API_TOKEN'
     ]
-    chat_id = dotenv_values('.env')['TELEGRAM_CHAT_ID']
+    chat_id = dotenv_values()['TELEGRAM_CHAT_ID']
     logger.addHandler(LogsHandler(
         telegram.Bot(token=bot_telegram_logger_api_token),
         telegram.Bot(token=bot_telegram_api_token),
