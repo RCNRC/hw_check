@@ -30,6 +30,10 @@ class LogsHandler(logging.Handler):
 
 
 def main():
+    logging.basicConfig(
+        format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
+    )
+    logger.setLevel(logging.DEBUG)
     devman_api_token = dotenv_values('.env')['DEVMAN_API_TOKEN']
     bot_telegram_api_token = dotenv_values('.env')['TELEGRAM_BOT_API_TOKEN']
     bot_telegram_logger_api_token = dotenv_values('.env')[
@@ -89,8 +93,4 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
-    )
-    logger.setLevel(logging.DEBUG)
     main()
