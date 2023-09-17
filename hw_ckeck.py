@@ -1,10 +1,13 @@
+import os
 from time import sleep
 import logging
 import sys
 import requests
-from dotenv import dotenv_values
 import telegram
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 logger = logging.getLogger('bots logger')
 
@@ -34,12 +37,12 @@ def main():
         format='%(process)d[%(levelname)s](%(asctime)s): %(message)s',
     )
     logger.setLevel(logging.DEBUG)
-    devman_api_token = dotenv_values()['DEVMAN_API_TOKEN']
-    bot_telegram_api_token = dotenv_values()['TELEGRAM_BOT_API_TOKEN']
-    bot_telegram_logger_api_token = dotenv_values()[
+    devman_api_token = os.environ['DEVMAN_API_TOKEN']
+    bot_telegram_api_token = os.environ['TELEGRAM_BOT_API_TOKEN']
+    bot_telegram_logger_api_token = os.environ[
         'TELEGRAM_BOT_LOGGER_API_TOKEN'
     ]
-    chat_id = dotenv_values()['TELEGRAM_CHAT_ID']
+    chat_id = os.environ['TELEGRAM_CHAT_ID']
     logger.addHandler(LogsHandler(
         telegram.Bot(token=bot_telegram_logger_api_token),
         telegram.Bot(token=bot_telegram_api_token),
